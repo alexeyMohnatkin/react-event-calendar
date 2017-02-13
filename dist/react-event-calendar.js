@@ -98,7 +98,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function EventCalendar(props) {
 	        _classCallCheck(this, EventCalendar);
 	
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EventCalendar).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (EventCalendar.__proto__ || Object.getPrototypeOf(EventCalendar)).call(this, props));
 	
 	        _this._eventTargets = {};
 	
@@ -106,7 +106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            today: _this.getToday()
 	        };
 	
-	        _this.calendar = new _calendarBase.Calendar({ siblingMonths: true });
+	        _this.calendar = new _calendarBase.Calendar({ siblingMonths: true, weekStart: _this.props.weekStart });
 	
 	        // Bind methods
 	        _this.getCalendarDays = _this.getCalendarDays.bind(_this);
@@ -283,7 +283,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    onClick: _this4.props.onEventClick,
 	                    onMouseOut: _this4.props.onEventMouseOut,
 	                    onMouseOver: _this4.props.onEventMouseOver,
-	                    wrapTitle: _this4.props.wrapTitle
+	                    wrapTitle: _this4.props.wrapTitle,
+	                    weekStart: _this4.props.weekStart
 	                });
 	            });
 	        }
@@ -321,6 +322,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react2.default.Component);
 	
 	EventCalendar.propTypes = {
+	    weekStart: _react2.default.PropTypes.number,
 	    daysOfTheWeek: _react2.default.PropTypes.array,
 	    events: _react2.default.PropTypes.array,
 	    maxEventSlots: _react2.default.PropTypes.number,
@@ -335,7 +337,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	EventCalendar.defaultProps = {
-	    daysOfTheWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+	    weekStart: 1,
+	    daysOfTheWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
 	    events: [],
 	    wrapTitle: true,
 	    maxEventSlots: 10
@@ -727,17 +730,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function CalendarDay() {
 	        _classCallCheck(this, CalendarDay);
 	
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(CalendarDay).apply(this, arguments));
+	        return _possibleConstructorReturn(this, (CalendarDay.__proto__ || Object.getPrototypeOf(CalendarDay)).apply(this, arguments));
 	    }
 	
 	    _createClass(CalendarDay, [{
 	        key: 'render',
 	        value: function render() {
-	            var _props = this.props;
-	            var day = _props.day;
-	            var isToday = _props.isToday;
-	            var events = _props.events;
-	            var onClick = _props.onClick;
+	            var _props = this.props,
+	                day = _props.day,
+	                isToday = _props.isToday,
+	                events = _props.events,
+	                onClick = _props.onClick;
 	
 	            var dayClasses = (0, _classnames2.default)({
 	                'flexColumn': true,
@@ -781,8 +784,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	CalendarDay.defaultProps = {
 	    onClick: function onClick() {}
 	};
-	
-	exports.default = CalendarDay;
 
 /***/ },
 /* 5 */
@@ -820,7 +821,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function CalendarEvent(props) {
 	        _classCallCheck(this, CalendarEvent);
 	
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CalendarEvent).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (CalendarEvent.__proto__ || Object.getPrototypeOf(CalendarEvent)).call(this, props));
 	
 	        _this.sharedArguments = [null, _this, _this.props.eventData, _this.props.day];
 	        // Bind methods
@@ -829,6 +830,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    _createClass(CalendarEvent, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            this.sharedArguments = [null, this, nextProps.eventData, nextProps.day];
+	        }
+	    }, {
 	        key: 'handleClick',
 	        value: function handleClick(e) {
 	            var _props;
@@ -846,7 +852,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return _react2.default.createElement('div', { className: 'event-slot' });
 	            }
 	
-	            var showLabel = this.props.eventData.isFirstDay || this.props.day.weekDay === 0 && this.props.wrapTitle;
+	            var showLabel = this.props.eventData.isFirstDay || this.props.day.weekDay === this.props.weekStart && this.props.wrapTitle;
 	            var title = showLabel ? this.props.eventData.title : '';
 	
 	            var eventClasses = (0, _classnames2.default)({
@@ -857,6 +863,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                'event-has-label': showLabel
 	            }, this.props.eventData.eventClasses);
 	
+	            // console.log(title);
 	            return _react2.default.createElement(
 	                'div',
 	                { className: eventClasses,
@@ -877,6 +884,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react2.default.Component);
 	
 	CalendarEvent.propTypes = {
+	    weekStart: _react2.default.PropTypes.number,
 	    day: _react2.default.PropTypes.object.isRequired,
 	    eventData: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.object, _react2.default.PropTypes.bool]),
 	    onClick: _react2.default.PropTypes.func,

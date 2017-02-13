@@ -55,7 +55,7 @@ export default {
                  title: data.length + ' day event ' + (data.title || ''),
                  description: description
             }
-        }) 
+        })
 
         return events;
     }

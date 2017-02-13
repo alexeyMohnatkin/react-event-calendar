@@ -17,7 +17,7 @@ class EventCalendar extends React.Component {
             today: this.getToday(),
         };
 
-        this.calendar = new Calendar({ siblingMonths: true, weekStart: 1 });
+        this.calendar = new Calendar({ siblingMonths: true, weekStart: this.props.weekStart });
 
         // Bind methods
         this.getCalendarDays = this.getCalendarDays.bind(this);
@@ -182,6 +182,7 @@ class EventCalendar extends React.Component {
                     onMouseOut={this.props.onEventMouseOut}
                     onMouseOver={this.props.onEventMouseOver}
                     wrapTitle={this.props.wrapTitle}
+                    weekStart={this.props.weekStart}
                     />
             );
         });
@@ -215,6 +216,7 @@ class EventCalendar extends React.Component {
 }
 
 EventCalendar.propTypes = {
+    weekStart: React.PropTypes.number,
     daysOfTheWeek: React.PropTypes.array,
     events: React.PropTypes.array,
     maxEventSlots: React.PropTypes.number,
@@ -229,14 +231,15 @@ EventCalendar.propTypes = {
 };
 
 EventCalendar.defaultProps = {
+    weekStart: 1,
     daysOfTheWeek: [
-        'Sunday',
         'Monday',
         'Tuesday',
         'Wednesday',
         'Thursday',
         'Friday',
         'Saturday',
+        'Sunday',
     ],
     events: [],
     wrapTitle: true,

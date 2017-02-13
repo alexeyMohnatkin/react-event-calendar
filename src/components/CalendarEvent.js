@@ -11,7 +11,7 @@ class CalendarEvent extends React.Component {
         // Bind methods
         this.handleClick = this.handleClick.bind(this);
     }
-    
+
     componentWillReceiveProps(nextProps) {
       this.sharedArguments = [null, this, nextProps.eventData, nextProps.day];
     }
@@ -22,12 +22,12 @@ class CalendarEvent extends React.Component {
     }
 
     render() {
-        // Return a placeholder element if there is no event data 
+        // Return a placeholder element if there is no event data
         if(!this.props.eventData) {
             return <div className="event-slot"></div>;
         }
 
-        const showLabel = this.props.eventData.isFirstDay || (this.props.day.weekDay === 0 && this.props.wrapTitle);
+        const showLabel = this.props.eventData.isFirstDay || (this.props.day.weekDay === this.props.weekStart && this.props.wrapTitle);
         const title = showLabel ? this.props.eventData.title : '';
 
         const eventClasses = classnames({
@@ -39,6 +39,7 @@ class CalendarEvent extends React.Component {
         }, this.props.eventData.eventClasses);
 
 
+        // console.log(title);
         return (
             <div className={eventClasses}
                 onClick={this.handleClick}
@@ -46,7 +47,7 @@ class CalendarEvent extends React.Component {
                 onMouseOver={this.props.onMouseOver.bind(...this.sharedArguments)}
             >
                 <div className="event-title">
-                    {title}    
+                    {title}
                 </div>
             </div>
         );
@@ -54,6 +55,7 @@ class CalendarEvent extends React.Component {
 }
 
 CalendarEvent.propTypes = {
+    weekStart: React.PropTypes.number,
     day: React.PropTypes.object.isRequired,
     eventData: React.PropTypes.oneOfType([
         React.PropTypes.object,
